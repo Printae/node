@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { PrinterModule } from './printer/printer.module';
+import { PrinterModule } from './v1/printer/printer.module';
+import { AppController } from './v1/app.controller';
+import { AppService } from './v1/app.service';
 
 @Module({
   imports: [PrinterModule],
