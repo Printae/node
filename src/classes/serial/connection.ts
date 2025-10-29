@@ -32,7 +32,13 @@ export class SerialConnection {
   }
 
   public onOpen(callback: () => void) {
-    this._serialPort.on('open', callback);
+    this._serialPort.once('open', () => {
+      console.log('Port opened, waiting for first chunks');
+
+      this._serialPort.once('data', () => {
+        callback();
+      });
+    });
   }
 
   public send(str: string) {
@@ -67,6 +73,13 @@ export class SerialConnection {
 
       this._okListeners = [];
 
+      return;
+    }
+
+    if (str.startsWith('.e ')) {
+      const emulatorStr = str.slice(3);
+
+      console.log(`[EMULATOR][SERIAL] ${emulatorStr}`);
       return;
     }
 
