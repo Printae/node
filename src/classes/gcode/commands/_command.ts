@@ -3,10 +3,12 @@ import { GCodeCommandPrefix } from './_index';
 export class GCodeCommand {
   protected _prefix: GCodeCommandPrefix;
   protected _number: number;
+  protected _args: string[];
 
-  constructor(prefix: GCodeCommandPrefix, number: number) {
+  constructor(prefix: GCodeCommandPrefix, number: number, args: string[] = []) {
     this._prefix = prefix;
     this._number = number;
+    this._args = args;
   }
 
   get prefix(): GCodeCommandPrefix {
@@ -18,6 +20,6 @@ export class GCodeCommand {
   }
 
   toString() {
-    return `${this._prefix}${this._number};`;
+    return `${this._prefix}${this._number} ${this._args.join(' ')};`;
   }
 }
