@@ -9,4 +9,9 @@ export class AppController {
   health() {
     return this.appService.health();
   }
+
+  @Get('/info')
+  async info() {
+    return await this.appService.info();
+  }
 }

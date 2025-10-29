@@ -4,6 +4,17 @@ import { Printer } from 'src/classes/printer/printer';
 
 @Injectable()
 export class PrinterService {
+  async _info() {
+    if (!Printer.isReady)
+      return {
+        connected: false,
+      };
+
+    return {
+      connected: true,
+    };
+  }
+
   async connectPrinter(port: string, baudRate: number) {
     if (!Number.isInteger(baudRate) || baudRate <= 0)
       return Response.error('Invalid baud rate');
