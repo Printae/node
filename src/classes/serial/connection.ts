@@ -34,6 +34,8 @@ export class SerialConnection {
   public onOpen(callback: () => void) {
     this._serialPort.once('open', () => {
       console.log('Port opened, waiting for first chunks');
+      this._serialPort.write('M105;\n');
+      this._serialPort.flush();
 
       this._serialPort.once('data', () => {
         callback();
