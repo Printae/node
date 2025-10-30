@@ -1,17 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'src/classes/api/response';
 import { Printer } from 'src/classes/printer/printer';
+import { PrinterFirmwareService } from './firmware/firmware.service';
 
 @Injectable()
 export class PrinterService {
+  constructor(private readonly firmwareService: PrinterFirmwareService) {}
+
   async _info() {
     if (!Printer.isReady)
       return {
         connected: false,
       };
 
+    const firmwareInfo = await this.firmwareService.getInfo();
+    if (firmwareInfo.status != 'ok')
+      return {
+        connected: false,
+      };
+
     return {
       connected: true,
+      name: (firmwareInfo.data.firmware['MACHINE_TYPE'] as string) || 'Unknown',
+      firmware:
+        (firmwareInfo.data.firmware['FIRMWARE_NAME'] as string) || 'Unknown',
     };
   }
 
