@@ -4,7 +4,7 @@ import { Printer } from './printer';
 export class PrinterSerial {
   private _printer: Printer;
 
-  private _queue: [string, (() => void) | null][] = [];
+  private _queue: [string, ((s: string) => void) | null][] = [];
 
   constructor(printer: Printer) {
     this._printer = printer;
@@ -23,21 +23,24 @@ export class PrinterSerial {
 
     const cmd = this._queue[0];
 
+    this._printer.rawSerial.flush();
     this._printer.rawSerial.send(cmd[0]);
     await this._printer.rawSerial.awaitOk();
 
+    const res = this._printer.rawSerial.getBuffer();
+
     this._queue.shift();
 
-    if (cmd[1]) cmd[1]();
+    if (cmd[1]) cmd[1](res);
   }
 
-  private queuePush(str: string, callback: (() => void) | null) {
+  private queuePush(str: string, callback: ((s: string) => void) | null) {
     this._queue.push([str, callback]);
   }
 
   public queue = {
     push: (str: string) => this.queuePush(str, null),
     awaitPush: (str: string) =>
-      new Promise<void>((res) => this.queuePush(str, res)),
+      new Promise<string>((res) => this.queuePush(str, res)),
   };
 }

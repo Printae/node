@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Response } from 'src/classes/api/response';
-import { HomeMovementGCodeCommand } from 'src/classes/gcode/commands/movement/home';
+import { HomeMovementGCodeCommand } from 'src/classes/gcode/commands/control/movement/home';
 import { Printer } from 'src/classes/printer/printer';
 
 @Injectable()

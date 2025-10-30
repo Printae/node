@@ -11,6 +11,7 @@ export class SerialConnection {
   private _okListeners: (() => void)[] = [];
 
   private _chunkBuffer: string = '';
+  private _receivedLines: string[] = [];
 
   private constructor(port: string, baudRate: number) {
     this._port = port;
@@ -53,6 +54,13 @@ export class SerialConnection {
     });
   }
 
+  public getBuffer(): string {
+    const buf = this._receivedLines.join('\n');
+    this._receivedLines = [];
+
+    return buf;
+  }
+
   private processChunk(c: string) {
     this._chunkBuffer += c;
 
@@ -85,7 +93,13 @@ export class SerialConnection {
       return;
     }
 
-    console.log('Invalid response', str);
+    this._receivedLines.push(str);
+  }
+
+  public flush() {
+    this._serialPort.flush();
+    this._receivedLines = [];
+    this._chunkBuffer = '';
   }
 
   public static create(port: string, baudRate: number): SerialConnection {

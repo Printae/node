@@ -8,9 +8,11 @@ export class PrinterInterface {
     this._printer = printer;
   }
 
-  public async sendCommand(command: GCodeCommand) {
+  public async sendCommand<T>(command: GCodeCommand): Promise<T> {
     const str = command.toString();
 
-    return await this._printer.serial.queue.awaitPush(str);
+    const res = await this._printer.serial.queue.awaitPush(str);
+
+    return command.processOutput(res) as T;
   }
 }

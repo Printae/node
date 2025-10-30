@@ -1,6 +1,6 @@
 import { GCodeCommandPrefix } from './_index';
 
-export class GCodeCommand {
+export abstract class GCodeCommand {
   protected _prefix: GCodeCommandPrefix;
   protected _number: number;
   protected _args: string[];
@@ -21,5 +21,9 @@ export class GCodeCommand {
 
   toString() {
     return `${this._prefix}${this._number} ${this._args.join(' ')};`;
+  }
+
+  processOutput(output: string): unknown {
+    return output as unknown;
   }
 }
